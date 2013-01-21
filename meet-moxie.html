@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>davbo - code &amp; words.</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <meta name="description" content="" />
+        <meta name="author" content="">
+
+        <!-- Optimized mobile viewport -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link href='http://fonts.googleapis.com/css?family=Dosis:200|Droid+Serif:400,400italic' rel='stylesheet' type='text/css'>
+
+        <link href="http://davbo.org/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="davblog Full Atom Feed" />
+        <link href="./theme/css/main.css" rel="stylesheet" />
+        <script type="text/javascript">
+
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-35971296-1']);
+            _gaq.push(['_setDomainName', 'davbo.org']);
+            _gaq.push(['_trackPageview']);
+
+            (function() {
+             var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+             ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+             var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+             })();
+
+         </script>
+     </head>
+
+     <body>
+         <header>
+         <div id="davbo" class="g1">
+             <h1><a href="/">davb<span class="quiet">l</span>o<span class="quiet">g</span></a></h1>
+         </div>
+         <div class="g2">
+             <h5>Code <span class="amp">&amp;</span> words reluctantly authored by David King.</h5>
+         </div>
+         <div class="g2">
+             <p>a software developer from Sheffield currently residing in Oxford.</p>
+         </div>
+         </header>
+         <div class="cf"></div>
+         <div id="content">
+             <div class="g2 date-gutter">
+    <p class="date"><span>2012-10-30</span></p>
+</div>
+<div class="g2">
+    <article>
+        <h2><a href="meet-moxie.html">Meet Moxie</a></h2>
+        <section class="entry"><p>Before you can meet Moxie, a bit of a history lesson is required.</p>
+<p>While I've only been working on Mobile Oxford since March 2012, the project originated as a JISC-funded project back in 2009 (or so). This produced an open source project 'Molly', as described on <a href="http://mollyproject.org">mollyproject.org</a>:</p>
+<blockquote>
+<p>Molly is a framework for the rapid development of information and service portals targeted at mobile internet devices.</p>
+</blockquote>
+<p>So, what on earth does that mean? Basically, Molly is a generic version of Mobile Oxford. Other institutions can deploy an equivalent to Mobile Oxford by just wiring up their LDAP for Contact Search, the z39.50 endpoint for library search, the Met Office code for a weather Forecast. At least, that's the idea.</p>
+<p>Over the years Molly has put on some weight, partly due to this generic nature (and some strong internal coupling) it can be quite difficult to make additions. Much of this code is perfectly fine and just needs some minor updates, for example, there is no need to rewrite z39.50 bindings or a wrapper for the Met Office website.</p>
+<p>Finally it's time to, meet <em>Moxie</em>,</p>
+<p>Times have changed since Mobile Oxford originated, Moxie is a response to the shift towards API/Client applications. We're developing Moxie as a HTTP API separately from the JavaScript Client. I'll save the real nitty-gritty technical details for other posts. Instead I'll leave you with a brief lay of the land.</p>
+<h5><a href="https://github.com/ox-it/moxie">Moxie API</a></h5>
+<ul>
+<li>Python</li>
+<li>Flask</li>
+<li>Apache Solr - primary datastore/search</li>
+<li>Redis - key-value store/cache/sessions</li>
+</ul>
+<h5><a href="https://github.com/ox-it/moxie-js-client">Moxie JS Client</a></h5>
+<ul>
+<li>Backbone</li>
+<li>Require.js</li>
+</ul></section>
+    </article>
+</div>
+         </div>
+         <footer class="g3 cf">
+         <small><span class="license">Creative Commons: Attribution-NonCommercial-ShareAlike</span></small>
+         </footer>
+
+     </body>
+ </html>

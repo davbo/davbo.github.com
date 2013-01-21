@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>davbo - code &amp; words.</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <meta name="description" content="" />
+        <meta name="author" content="">
+
+        <!-- Optimized mobile viewport -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link href='http://fonts.googleapis.com/css?family=Dosis:200|Droid+Serif:400,400italic' rel='stylesheet' type='text/css'>
+
+        <link href="http://davbo.org/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="davblog Full Atom Feed" />
+        <link href="./theme/css/main.css" rel="stylesheet" />
+        <script type="text/javascript">
+
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-35971296-1']);
+            _gaq.push(['_setDomainName', 'davbo.org']);
+            _gaq.push(['_trackPageview']);
+
+            (function() {
+             var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+             ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+             var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+             })();
+
+         </script>
+     </head>
+
+     <body>
+         <header>
+         <div id="davbo" class="g1">
+             <h1><a href="/">davb<span class="quiet">l</span>o<span class="quiet">g</span></a></h1>
+         </div>
+         <div class="g2">
+             <h5>Code <span class="amp">&amp;</span> words reluctantly authored by David King.</h5>
+         </div>
+         <div class="g2">
+             <p>a software developer from Sheffield currently residing in Oxford.</p>
+         </div>
+         </header>
+         <div class="cf"></div>
+         <div id="content">
+             <div class="g2 date-gutter">
+    <p class="date"><span>2012-11-01</span></p>
+</div>
+<div class="g2">
+    <article>
+        <h2><a href="services-in-flask.html">Services in Flask</a></h2>
+        <section class="entry"><p>Due to the nature of <a href="/meet-moxie/">Moxie</a> and <a href="http://m.ox.ac.uk">Mobile Oxford</a> we require a highly configurable application (such that it could be deployed at another institution). There were a couple of projects out there which offer this to some degree, <a href="http://pypi.python.org/pypi/Flask-YAMLConfig">Flask-YAMLConfig</a> for example. Our own attempts have produced what we've rather creatively named <em>Services</em>.</p>
+<p>Services to us represent a logical chunk of functionality which can be (so far) configured centrally (this actually happens on a per-<a href="http://flask.pocoo.org/docs/blueprints/">blueprint</a> basis). Excuse the loose terminology but that should give you an idea of the goal.</p>
+<p>So, what do Services look like? Take a look at our <a href="https://github.com/ox-it/moxie/blob/master/moxie/core/kv.py#L10"><code>KVService</code></a>. Usage of this Service can be found within our Celery <a href="https://github.com/ox-it/moxie/blob/master/moxie/places/tasks.py">tasks</a> and <a href="https://github.com/ox-it/moxie/blob/master/moxie/transport/views.py">transport views</a>. Each time the class is instantiated <code>from_context</code> this means the Service accesses its own <code>*args</code> and <code>**kwargs</code> from a per-blueprint configuration. In other words:</p>
+<blockquote>
+<p>The same Service accessed within calls to views registered by separate blueprints will have separate configurations.</p>
+</blockquote>
+<p>What's more, you can safely rely on the fact that within a single request Services accessed through <code>from_context</code> will <em>always</em> return the <strong>same</strong> object. See the <a href="https://github.com/ox-it/moxie/blob/master/moxie/tests/test_services.py#L17">tests</a> for examples of this behaviour.</p>
+<p>The API can be further sugared by using a <a href="http://werkzeug.pocoo.org/docs/local/#werkzeug.local.LocalProxy">LocalProxy</a>:</p>
+<div class="codehilite"><pre><span class="n">kv_store</span> <span class="o">=</span> <span class="n">LocalProxy</span><span class="p">(</span><span class="n">KVService</span><span class="o">.</span><span class="n">from_context</span><span class="p">)</span>
+</pre></div>
+
+
+<p>We're still actively working on this approach, but so far I've been pleasantly surprised with it. We have fine-grained configuration and a clear separation between application logic and the transport layer.</p></section>
+    </article>
+</div>
+         </div>
+         <footer class="g3 cf">
+         <small><span class="license">Creative Commons: Attribution-NonCommercial-ShareAlike</span></small>
+         </footer>
+
+     </body>
+ </html>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>davblog</title><link href="http://davbo.org/" rel="alternate"></link><link href="http://davbo.org/feeds/misc.atom.xml" rel="self"></link><id>http://davbo.org/</id><updated>2012-11-01T00:00:00+00:00</updated><entry><title>Services in Flask</title><link href="http://davbo.org/services-in-flask.html" rel="alternate"></link><updated>2012-11-01T00:00:00+00:00</updated><author><name>David King</name></author><id>tag:davbo.org,2012-11-01:services-in-flask.html</id><summary type="html">&lt;p&gt;Due to the nature of &lt;a href="/meet-moxie/"&gt;Moxie&lt;/a&gt; and &lt;a href="http://m.ox.ac.uk"&gt;Mobile Oxford&lt;/a&gt; we require a highly configurable application (such that it could be deployed at another institution). There were a couple of projects out there which offer this to some degree, &lt;a href="http://pypi.python.org/pypi/Flask-YAMLConfig"&gt;Flask-YAMLConfig&lt;/a&gt; for example. Our own attempts have produced what we've rather creatively named &lt;em&gt;Services&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Services to us represent a logical chunk of functionality which can be (so far) configured centrally (this actually happens on a per-&lt;a href="http://flask.pocoo.org/docs/blueprints/"&gt;blueprint&lt;/a&gt; basis). Excuse the loose terminology but that should give you an idea of the goal.&lt;/p&gt;
+&lt;p&gt;So, what do Services look like? Take a look at our &lt;a href="https://github.com/ox-it/moxie/blob/master/moxie/core/kv.py#L10"&gt;&lt;code&gt;KVService&lt;/code&gt;&lt;/a&gt;. Usage of this Service can be found within our Celery &lt;a href="https://github.com/ox-it/moxie/blob/master/moxie/places/tasks.py"&gt;tasks&lt;/a&gt; and &lt;a href="https://github.com/ox-it/moxie/blob/master/moxie/transport/views.py"&gt;transport views&lt;/a&gt;. Each time the class is instantiated &lt;code&gt;from_context&lt;/code&gt; this means the Service accesses its own &lt;code&gt;*args&lt;/code&gt; and &lt;code&gt;**kwargs&lt;/code&gt; from a per-blueprint configuration. In other words:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The same Service accessed within calls to views registered by separate blueprints will have separate configurations.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;What's more, you can safely rely on the fact that within a single request Services accessed through &lt;code&gt;from_context&lt;/code&gt; will &lt;em&gt;always&lt;/em&gt; return the &lt;strong&gt;same&lt;/strong&gt; object. See the &lt;a href="https://github.com/ox-it/moxie/blob/master/moxie/tests/test_services.py#L17"&gt;tests&lt;/a&gt; for examples of this behaviour.&lt;/p&gt;
+&lt;p&gt;The API can be further sugared by using a &lt;a href="http://werkzeug.pocoo.org/docs/local/#werkzeug.local.LocalProxy"&gt;LocalProxy&lt;/a&gt;:&lt;/p&gt;
+&lt;div class="codehilite"&gt;&lt;pre&gt;&lt;span class="n"&gt;kv_store&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;LocalProxy&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;KVService&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;from_context&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;We're still actively working on this approach, but so far I've been pleasantly surprised with it. We have fine-grained configuration and a clear separation between application logic and the transport layer.&lt;/p&gt;</summary></entry><entry><title>Meet Moxie</title><link href="http://davbo.org/meet-moxie.html" rel="alternate"></link><updated>2012-10-30T00:00:00+00:00</updated><author><name>David King</name></author><id>tag:davbo.org,2012-10-30:meet-moxie.html</id><summary type="html">&lt;p&gt;Before you can meet Moxie, a bit of a history lesson is required.&lt;/p&gt;
+&lt;p&gt;While I've only been working on Mobile Oxford since March 2012, the project originated as a JISC-funded project back in 2009 (or so). This produced an open source project 'Molly', as described on &lt;a href="http://mollyproject.org"&gt;mollyproject.org&lt;/a&gt;:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Molly is a framework for the rapid development of information and service portals targeted at mobile internet devices.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;So, what on earth does that mean? Basically, Molly is a generic version of Mobile Oxford. Other institutions can deploy an equivalent to Mobile Oxford by just wiring up their LDAP for Contact Search, the z39.50 endpoint for library search, the Met Office code for a weather Forecast. At least, that's the idea.&lt;/p&gt;
+&lt;p&gt;Over the years Molly has put on some weight, partly due to this generic nature (and some strong internal coupling) it can be quite difficult to make additions. Much of this code is perfectly fine and just needs some minor updates, for example, there is no need to rewrite z39.50 bindings or a wrapper for the Met Office website.&lt;/p&gt;
+&lt;p&gt;Finally it's time to, meet &lt;em&gt;Moxie&lt;/em&gt;,&lt;/p&gt;
+&lt;p&gt;Times have changed since Mobile Oxford originated, Moxie is a response to the shift towards API/Client applications. We're developing Moxie as a HTTP API separately from the JavaScript Client. I'll save the real nitty-gritty technical details for other posts. Instead I'll leave you with a brief lay of the land.&lt;/p&gt;
+&lt;h5&gt;&lt;a href="https://github.com/ox-it/moxie"&gt;Moxie API&lt;/a&gt;&lt;/h5&gt;
+&lt;ul&gt;
+&lt;li&gt;Python&lt;/li&gt;
+&lt;li&gt;Flask&lt;/li&gt;
+&lt;li&gt;Apache Solr - primary datastore/search&lt;/li&gt;
+&lt;li&gt;Redis - key-value store/cache/sessions&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h5&gt;&lt;a href="https://github.com/ox-it/moxie-js-client"&gt;Moxie JS Client&lt;/a&gt;&lt;/h5&gt;
+&lt;ul&gt;
+&lt;li&gt;Backbone&lt;/li&gt;
+&lt;li&gt;Require.js&lt;/li&gt;
+&lt;/ul&gt;</summary></entry></feed>
